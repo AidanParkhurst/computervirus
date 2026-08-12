@@ -1,0 +1,132 @@
+/* Edit these ~10 lines to restyle the whole site. */
+:root {
+  --color-bg: #c0c0d0;
+  --color-fg: #000000;
+  --color-panel: #ffffff;
+  --color-accent: #0000ee;
+  --color-border: #000000;
+  --font-stack: Verdana, Geneva, "Times New Roman", Times, serif;
+  --border-style: 2px solid var(--color-border);
+  --spacing-unit: 0.75em;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-stack);
+  margin: 0;
+  padding: 0;
+}
+
+header,
+main,
+footer {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--spacing-unit);
+}
+
+header {
+  text-align: center;
+  border-bottom: var(--border-style);
+}
+
+h1 {
+  margin: 0;
+  letter-spacing: 0.05em;
+}
+
+.tagline {
+  font-style: italic;
+  margin: 0.25em 0 0;
+}
+
+.banner,
+#leaderboard-section,
+#create-section {
+  background: var(--color-panel);
+  border: var(--border-style);
+  padding: var(--spacing-unit);
+  margin-bottom: var(--spacing-unit);
+}
+
+.banner h2,
+#leaderboard-section h2,
+#create-section h2 {
+  margin-top: 0;
+}
+
+code {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  padding: 0.1em 0.4em;
+  font-family: "Courier New", Courier, monospace;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid var(--color-border);
+  padding: 0.4em 0.6em;
+  text-align: left;
+}
+
+th {
+  background: var(--color-bg);
+}
+
+label {
+  display: block;
+  margin-bottom: 0.25em;
+  font-weight: bold;
+}
+
+input[type="text"] {
+  border: var(--border-style);
+  padding: 0.4em;
+  font-family: var(--font-stack);
+  width: 100%;
+  max-width: 20em;
+}
+
+button {
+  border: var(--border-style);
+  background: var(--color-panel);
+  color: var(--color-fg);
+  font-family: var(--font-stack);
+  padding: 0.4em 0.9em;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--color-accent);
+  color: var(--color-panel);
+}
+
+#create-form button {
+  margin-top: var(--spacing-unit);
+}
+
+/* Applied by app.js when a returning player already has a link — the
+   creation form drops in visual weight instead of disappearing. */
+#create-section.demoted {
+  padding: 0.4em var(--spacing-unit);
+}
+
+#create-section.demoted h2 {
+  font-size: 1em;
+}
+
+footer {
+  text-align: center;
+  font-size: 0.85em;
+  border-top: var(--border-style);
+}

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>computervir.us</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>computervir.us</h1>
+  <p class="tagline">a deliberately sketchy link, and nothing else.</p>
+</header>
+
+<main>
+
+  <!-- Three lead-in states, decided once on load in app.js. Exactly one
+       of these is unhidden at a time; everything below is shared. -->
+  <section id="banner-cold" class="banner" hidden>
+    <h2>what is this?</h2>
+    <p>
+      Someone could send you a link that looks exactly like a virus:
+      <code>computervir.us/k3Fd9x2p</code>, ugly on purpose. Click it and
+      nothing happens except this: the person who made it gets a point, and
+      you land here. That's the whole game. No download, no tracking beyond
+      a click count, no harm done — just bragging rights on the board below.
+    </p>
+  </section>
+
+  <section id="banner-got" class="banner" hidden>
+    <h2>you've been got.</h2>
+    <p>
+      You just scored a point for <strong id="got-name"></strong>. That's
+      the entire trick. Make your own link below and get someone back.
+    </p>
+  </section>
+
+  <section id="banner-returning" class="banner" hidden>
+    <h2>welcome back, <span id="returning-name"></span></h2>
+    <p>
+      your link: <code id="returning-link"></code>
+      <button type="button" id="returning-copy">copy</button>
+    </p>
+    <p>current score: <strong id="returning-score"></strong></p>
+  </section>
+
+  <section id="leaderboard-section">
+    <h2>leaderboard</h2>
+    <table id="leaderboard-table">
+      <thead>
+        <tr><th>rank</th><th>name</th><th>score</th></tr>
+      </thead>
+      <tbody id="leaderboard-body"></tbody>
+    </table>
+  </section>
+
+  <section id="create-section">
+    <h2 id="create-heading">get your link</h2>
+    <form id="create-form">
+      <label for="display-name">your name</label>
+      <input id="display-name" name="display_name" type="text" maxlength="40" required>
+      <button type="submit">generate my link</button>
+    </form>
+    <div id="create-result" hidden>
+      <p>save this. it's the only way back to your score.</p>
+      <p>
+        <code id="result-link"></code>
+        <button type="button" id="result-copy">copy</button>
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>computervir.us is a joke leaderboard. don't actually click links from people you don't trust — this one's just self-aware.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

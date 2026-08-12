@@ -1,0 +1,11 @@
+# Copy this file to .dev.vars and fill in real values. .dev.vars is
+# gitignored — never commit it.
+
+# Supabase project settings -> API
+SUPABASE_URL=https://YOUR-PROJECT-REF.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# Any long random string works for these two. Generate with, e.g.:
+#   openssl rand -hex 32
+NONCE_SECRET=change-me-to-a-long-random-string
+IP_HASH_SECRET=change-me-to-a-different-long-random-string

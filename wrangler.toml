@@ -1,0 +1,11 @@
+name = "computervirus"
+main = "worker/index.js"
+compatibility_date = "2024-09-23"
+
+# Serves public/ directly during `wrangler dev`, bound as env.ASSETS.
+# In production (real GitHub Pages hosting), the Worker won't have this
+# binding and falls back to fetching FRONTEND_ORIGIN instead — see
+# serveFrontend() in worker/index.js.
+[assets]
+directory = "./public"
+binding = "ASSETS"
