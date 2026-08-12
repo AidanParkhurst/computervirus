@@ -1,13 +1,26 @@
-/* Edit these ~10 lines to restyle the whole site. */
+/* Edit this block to restyle the whole site. */
 :root {
-  --color-bg: #c0c0d0;
+  --color-bg: #b0b0b0;          /* gray: base tone under the tiled background */
+  --color-bg-tile: #c2c2c2;     /* light gray: alternate tone, close to --color-bg for a subtle weave */
+  --color-panel: #ffffff;       /* white: card face */
+  --color-border-light: #eeeeee;
+  --color-border-dark: var(--color-bg);  /* darker of the two checkerboard grays */
+  --color-navy: #000080;
+  --color-yellow: #ffff00;
   --color-fg: #000000;
-  --color-panel: #ffffff;
-  --color-accent: #0000ee;
-  --color-border: #000000;
-  --font-stack: Verdana, Geneva, "Times New Roman", Times, serif;
-  --border-style: 2px solid var(--color-border);
-  --spacing-unit: 0.75em;
+  --color-link: #0000ee;
+  --color-term-bg: #000000;
+  --color-term-fg: #00ff00;
+  --color-header-shadow: #ff0000; /* red: single hard-offset shadow on every header */
+  --color-green: #008000;       /* green: proud banner background for the "make another link" card */
+  --color-blue-mid: #4169e1;    /* middle-tone blue: high scores header text shadow */
+  --color-blue-rich: #14185c;   /* deep, richer blue: header gradients (darker, not brighter) */
+  --color-zebra-dark: #dcdcdc;  /* the darker of the table's two stripe tones — still lighter than the card behind it */
+  --color-aquamarine: #7fffd4;  /* page header subtext */
+  --font-serif: "Times New Roman", Times, serif;
+  --font-mono: "Courier New", Courier, monospace;
+  --border-width: 3px;
+  --spacing-unit: 0.75rem; /* rem, not em: this gets used for both a panel's padding and its child headers' negative margins (to pull them flush to the border) — em would resolve differently on each element depending on its own font-size and throw that cancellation off */
 }
 
 * {
@@ -15,72 +28,210 @@
 }
 
 body {
-  background: var(--color-bg);
+  font-family: var(--font-serif);
   color: var(--color-fg);
-  font-family: var(--font-stack);
   margin: 0;
   padding: 0;
+  background-color: var(--color-bg);
+  /* pure-CSS diagonal stripe, no image file */
+  background-image: repeating-linear-gradient(
+    -75deg,
+    var(--color-bg-tile) 0,
+    var(--color-bg-tile) 2px,
+    var(--color-bg) 2px,
+    var(--color-bg) 4px
+  );
 }
 
-header,
-main,
+a {
+  color: var(--color-link);
+}
+
 footer {
   max-width: 640px;
   margin: 0 auto;
   padding: var(--spacing-unit);
 }
 
+/* header and main share this width so the header sits flush above the two
+   columns below it (main content + the banner's narrower right column). */
+header,
+main {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+header {
+  padding: var(--spacing-unit);
+}
+
+/* Single-row nav strip between header and main — same width as both,
+   but only tall enough for one line of links. */
+#site-nav {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0.3em var(--spacing-unit);
+  text-align: center;
+}
+
+main {
+  /* No padding here: header's border sits right at the 900px edge (outside
+     its own padding), so main can't add extra padding of its own without
+     insetting its cards' borders past where header's border lands. Each
+     card already carries its own padding via .panel. */
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: var(--spacing-unit);
+  align-items: start;
+}
+
+@media (max-width: 640px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+
 header {
   text-align: center;
-  border-bottom: var(--border-style);
+  background: linear-gradient(to bottom, var(--color-navy), var(--color-blue-rich));
+  margin-top: var(--spacing-unit);
+  border-top: var(--border-width) solid var(--color-border-light);
+  border-left: var(--border-width) solid var(--color-border-light);
+  border-bottom: var(--border-width) solid var(--color-border-dark);
+  border-right: var(--border-width) solid var(--color-border-dark);
 }
 
 h1 {
   margin: 0;
-  letter-spacing: 0.05em;
+  color: var(--color-yellow);
+  letter-spacing: 0.08em;
+  font-size: 2.5em;
+  /* hard-offset shadow, not a blurred glow */
+  text-shadow: 2px 2px 0 var(--color-header-shadow);
 }
 
 .tagline {
-  font-style: italic;
+  font-family: var(--font-mono);
+  color: var(--color-aquamarine);
+  font-style: normal;
   margin: 0.25em 0 0;
 }
 
-.banner,
-#leaderboard-section,
-#create-section {
+/* Shared raised-panel look for every boxed section on the page. */
+.panel {
   background: var(--color-panel);
-  border: var(--border-style);
   padding: var(--spacing-unit);
   margin-bottom: var(--spacing-unit);
+  border-top: var(--border-width) solid var(--color-border-light);
+  border-left: var(--border-width) solid var(--color-border-light);
+  border-bottom: var(--border-width) solid var(--color-border-dark);
+  border-right: var(--border-width) solid var(--color-border-dark);
 }
 
-.banner h2,
-#leaderboard-section h2,
-#create-section h2 {
+/* Smaller by default — h1 and the About This Website heading are the only
+   headers exempt, and both set their own explicit font-size below. */
+.panel h2 {
   margin-top: 0;
+  color: var(--color-navy);
+  font-size: 1.15em;
+  text-shadow: 1px 1px 0 var(--color-header-shadow);
+}
+
+/* Same full-bleed proud-banner treatment as the leaderboard/create-section
+   headings, in blue, for the state banner in the right-hand column. */
+.banner h2 {
+  margin: calc(-1 * var(--spacing-unit)) calc(-1 * var(--spacing-unit)) var(--spacing-unit);
+  padding: 0.5em var(--spacing-unit);
+  background: var(--color-navy);
+  color: var(--color-yellow);
+  text-shadow: none;
+}
+
+/* Diversifies the otherwise-all-white cards with the lighter of the two
+   checkerboard grays. */
+.panel-alt {
+  background: var(--color-bg-tile);
+}
+
+/* A prouder banner-style heading for the leaderboard card: full-width navy
+   flag instead of plain inline text, so the table below reads as the
+   card's focal point rather than competing with its own heading. */
+#leaderboard-section h2 {
+  margin: calc(-1 * var(--spacing-unit)) calc(-1 * var(--spacing-unit)) 0;
+  padding: 0.5em var(--spacing-unit);
+  background: var(--color-navy);
+  color: var(--color-yellow);
+  font-family: var(--font-serif);
+  font-size: 1.15em;
+  text-align: center;
+  text-shadow: 2px 2px 0 var(--color-blue-mid);
+}
+
+/* Fills the rest of the card flush to its edges, right up against the
+   heading banner above, so the table itself is the card's whole surface. */
+#leaderboard-section table {
+  width: calc(100% + 2 * var(--spacing-unit));
+  margin: 0 calc(-1 * var(--spacing-unit)) calc(-1 * var(--spacing-unit));
+  background: var(--color-zebra-dark);
+  border: none;
+}
+
+/* Same prouder full-width banner treatment as the leaderboard heading, but
+   its own color so the two cards don't read as identical. */
+#create-section h2 {
+  margin: calc(-1 * var(--spacing-unit)) calc(-1 * var(--spacing-unit)) var(--spacing-unit);
+  padding: 0.5em var(--spacing-unit);
+  background: var(--color-green);
+  color: var(--color-yellow);
+  text-align: left;
+  text-transform: uppercase;
+  font-size: 1.15em;
+  text-shadow: 2px 2px 0 var(--color-header-shadow);
 }
 
 code {
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
+  background: #ffffff;
+  border: 1px solid var(--color-border-dark);
   padding: 0.1em 0.4em;
-  font-family: "Courier New", Courier, monospace;
+  font-family: var(--font-mono);
 }
 
 table {
   width: 100%;
+  font-family: var(--font-mono);
+  background: var(--color-panel);
   border-collapse: collapse;
+  border-top: var(--border-width) solid var(--color-border-light);
+  border-left: var(--border-width) solid var(--color-border-light);
+  border-bottom: var(--border-width) solid var(--color-border-dark);
+  border-right: var(--border-width) solid var(--color-border-dark);
 }
 
 th,
 td {
-  border: 1px solid var(--color-border);
   padding: 0.4em 0.6em;
   text-align: left;
 }
 
 th {
-  background: var(--color-bg);
+  /* Kept independent of --color-border-dark: that token is becoming a much
+     lighter gray below, which white label text wouldn't read against. */
+  background: #404040;
+  color: #ffffff;
+  text-transform: uppercase;
+  border-top: var(--border-width) solid var(--color-border-light);
+  border-left: var(--border-width) solid var(--color-border-light);
+  border-bottom: var(--border-width) solid var(--color-border-dark);
+  border-right: var(--border-width) solid var(--color-border-dark);
+}
+
+td {
+  border: 1px solid var(--color-border-dark);
+}
+
+tbody tr:nth-child(odd) {
+  background: var(--color-panel);
 }
 
 label {
@@ -89,44 +240,113 @@ label {
   font-weight: bold;
 }
 
+/* One line: "Your Name: [input] [button]" instead of stacked rows. */
+#create-form {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+#create-form label {
+  display: inline;
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
 input[type="text"] {
-  border: var(--border-style);
+  font-family: var(--font-mono);
   padding: 0.4em;
-  font-family: var(--font-stack);
   width: 100%;
   max-width: 20em;
+  background: #ffffff;
+  border-top: var(--border-width) solid var(--color-border-dark);
+  border-left: var(--border-width) solid var(--color-border-dark);
+  border-bottom: var(--border-width) solid var(--color-border-light);
+  border-right: var(--border-width) solid var(--color-border-light);
+}
+
+#create-form input[type="text"] {
+  width: auto;
+  flex: 1;
+  min-width: 8em;
 }
 
 button {
-  border: var(--border-style);
+  font-family: var(--font-serif);
   background: var(--color-panel);
   color: var(--color-fg);
-  font-family: var(--font-stack);
   padding: 0.4em 0.9em;
   cursor: pointer;
+  border-top: var(--border-width) solid var(--color-border-light);
+  border-left: var(--border-width) solid var(--color-border-light);
+  border-bottom: var(--border-width) solid var(--color-border-dark);
+  border-right: var(--border-width) solid var(--color-border-dark);
 }
 
-button:hover {
-  background: var(--color-accent);
-  color: var(--color-panel);
+button:active {
+  border-top-color: var(--color-border-dark);
+  border-left-color: var(--color-border-dark);
+  border-bottom-color: var(--color-border-light);
+  border-right-color: var(--color-border-light);
 }
 
-#create-form button {
-  margin-top: var(--spacing-unit);
+/* Accented call-to-action: stands apart from the neutral beveled buttons
+   used everywhere else on the page. */
+.cta-button {
+  background: var(--color-green);
+  color: #ffffff;
+  font-weight: bold;
 }
 
 /* Applied by app.js when a returning player already has a link — the
-   creation form drops in visual weight instead of disappearing. */
+   creation form drops in visual weight instead of disappearing. Only
+   padding-bottom shrinks: top/left/right must stay at --spacing-unit,
+   since the h2's negative margin below is sized to cancel exactly that. */
 #create-section.demoted {
-  padding: 0.4em var(--spacing-unit);
+  padding-bottom: 0.4em;
 }
 
 #create-section.demoted h2 {
   font-size: 1em;
+  text-shadow: none;
+}
+
+.visitor-counter {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 2em;
+  letter-spacing: 0.15em;
+  color: var(--color-term-fg);
+  background: var(--color-term-bg);
+  padding: 0.3em 0.6em;
+  margin: 0 0 var(--spacing-unit);
+  border-top: var(--border-width) solid var(--color-border-dark);
+  border-left: var(--border-width) solid var(--color-border-dark);
+  border-bottom: var(--border-width) solid var(--color-border-light);
+  border-right: var(--border-width) solid var(--color-border-light);
+}
+
+#about-section h2 {
+  font-weight: normal;
+  font-size: 1.5em;
+  text-align: center;
+  text-shadow: none;
+  padding-bottom: 0.4em;
+  border-bottom: 2px solid var(--color-link);
+}
+
+#about-section p {
+  font-family: var(--font-mono);
+}
+
+.banner ol {
+  list-style-position: inside;
+  margin: 0;
+  padding-left: 0;
 }
 
 footer {
   text-align: center;
   font-size: 0.85em;
-  border-top: var(--border-style);
 }

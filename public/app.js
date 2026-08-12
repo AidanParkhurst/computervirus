@@ -4,6 +4,11 @@
 const $ = (id) => document.getElementById(id);
 const PLAYER_KEY = 'cv_player'; // localStorage: { token, owner_key, display_name }
 
+// Declared before init() runs: a cold visit calls init -> renderLeaderboard
+// -> fetchLeaderboard synchronously with no await in between, so this must
+// already be initialized rather than still pending further down the file.
+let leaderboardCache = null;
+
 init();
 
 async function init() {
@@ -68,7 +73,7 @@ async function handleReturningState(stored) {
   $('returning-copy').addEventListener('click', () => copyText(link));
 
   $('create-section').classList.add('demoted');
-  $('create-heading').textContent = 'make another link';
+  $('create-heading').textContent = '★ make another link ★';
 
   const rows = await fetchLeaderboard();
   const mine = rows.find((r) => r.token === stored.token);
@@ -102,7 +107,6 @@ function setupCreateForm() {
   });
 }
 
-let leaderboardCache = null;
 async function fetchLeaderboard() {
   if (!leaderboardCache) {
     const res = await fetch('/api/leaderboard');
@@ -118,19 +122,28 @@ async function fetchLeaderboard() {
 
 async function renderLeaderboard() {
   const rows = await fetchLeaderboard();
+
   const body = $('leaderboard-body');
   body.innerHTML = '';
-  rows.forEach((row, i) => {
+  rows.slice(0, 10).forEach((row, i) => {
     const tr = document.createElement('tr');
     const rank = document.createElement('td');
     rank.textContent = i + 1;
     const name = document.createElement('td');
-    name.textContent = row.display_name;
+    const nameLink = document.createElement('a');
+    nameLink.href = `/${row.token}`;
+    nameLink.textContent = row.display_name;
+    name.appendChild(nameLink);
     const score = document.createElement('td');
     score.textContent = row.score;
     tr.append(rank, name, score);
     body.appendChild(tr);
   });
+
+  // Approximates total clicks from the top-50 rows the API returns — good
+  // enough for a flavor widget, not a real global count.
+  const totalClicks = rows.reduce((sum, row) => sum + row.score, 0);
+  $('visitor-counter').textContent = `YOU ARE VISITOR: ${String(totalClicks).padStart(6, '0')}`;
 }
 
 function copyText(text) {

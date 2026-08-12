@@ -8,72 +8,96 @@
 </head>
 <body>
 
-<header>
-  <h1>computervir.us</h1>
-  <p class="tagline">a deliberately sketchy link, and nothing else.</p>
+<header id="page-top">
+  <h1>★ COMPUTER VIR.US ★</h1>
+  <p class="tagline">~ a sketchy link sharing game ~</p>
 </header>
+
+<nav id="site-nav" class="panel panel-alt">
+  <a href="#page-top">HOME</a> | <a href="#leaderboard-section">High Scores</a> | <a href="#about-section">About</a>
+</nav>
 
 <main>
 
-  <!-- Three lead-in states, decided once on load in app.js. Exactly one
-       of these is unhidden at a time; everything below is shared. -->
-  <section id="banner-cold" class="banner" hidden>
-    <h2>what is this?</h2>
-    <p>
-      Someone could send you a link that looks exactly like a virus:
-      <code>computervir.us/k3Fd9x2p</code>, ugly on purpose. Click it and
-      nothing happens except this: the person who made it gets a point, and
-      you land here. That's the whole game. No download, no tracking beyond
-      a click count, no harm done — just bragging rights on the board below.
-    </p>
-  </section>
+  <div id="main-column">
 
-  <section id="banner-got" class="banner" hidden>
-    <h2>you've been got.</h2>
-    <p>
-      You just scored a point for <strong id="got-name"></strong>. That's
-      the entire trick. Make your own link below and get someone back.
-    </p>
-  </section>
+    <section id="leaderboard-section" class="panel panel-alt">
+      <h2>🏆 TOP 10 HIGH SCORES 🏆</h2>
+      <table id="leaderboard-table">
+        <thead>
+          <tr><th>rank</th><th>name</th><th>score</th></tr>
+        </thead>
+        <tbody id="leaderboard-body"></tbody>
+      </table>
+    </section>
 
-  <section id="banner-returning" class="banner" hidden>
-    <h2>welcome back, <span id="returning-name"></span></h2>
-    <p>
-      your link: <code id="returning-link"></code>
-      <button type="button" id="returning-copy">copy</button>
-    </p>
-    <p>current score: <strong id="returning-score"></strong></p>
-  </section>
-
-  <section id="leaderboard-section">
-    <h2>leaderboard</h2>
-    <table id="leaderboard-table">
-      <thead>
-        <tr><th>rank</th><th>name</th><th>score</th></tr>
-      </thead>
-      <tbody id="leaderboard-body"></tbody>
-    </table>
-  </section>
-
-  <section id="create-section">
-    <h2 id="create-heading">get your link</h2>
-    <form id="create-form">
-      <label for="display-name">your name</label>
-      <input id="display-name" name="display_name" type="text" maxlength="40" required>
-      <button type="submit">generate my link</button>
-    </form>
-    <div id="create-result" hidden>
-      <p>save this. it's the only way back to your score.</p>
+    <section id="about-section" class="panel">
+      <h2>~ About This Website ~</h2>
       <p>
-        <code id="result-link"></code>
-        <button type="button" id="result-copy">copy</button>
+        Welcome to <a href="/">COMPUTERVIR.US</a>!!! The only website where
+        players compete to share ridiculous, unclickable links.
       </p>
-    </div>
-  </section>
+      <p>
+        Make a link, and try to convince a friend to click it. If they do,
+        you win a point!
+      </p>
+    </section>
+
+    <section id="create-section" class="panel panel-alt">
+      <h2 id="create-heading">★ get your link ★</h2>
+      <form id="create-form">
+        <label for="display-name">Your Name:</label>
+        <input id="display-name" name="display_name" type="text" maxlength="40" required>
+        <button type="submit" class="cta-button">generate my link</button>
+      </form>
+      <div id="create-result" hidden>
+        <p>save this. it's the only way back to your score.</p>
+        <p>
+          <code id="result-link"></code>
+          <button type="button" id="result-copy">copy</button>
+        </p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Three lead-in states, decided once on load in app.js. Exactly one
+       of these is unhidden at a time. Sits in its own narrower column. -->
+  <aside id="banner-column">
+
+    <section id="banner-cold" class="panel banner" hidden>
+      <h2>★ HELLO NEWBIE ★</h2>
+      <p>This is a game about sketchy links.</p>
+      <ol>
+        <li>Set a name, and get your link.</li>
+        <li>Convince someone to click it.</li>
+        <li>Watch your name climb the scoreboard.</li>
+      </ol>
+    </section>
+
+    <section id="banner-got" class="panel banner" hidden>
+      <h2>★ you've been got. ★</h2>
+      <p>
+        You just scored a point for <strong id="got-name"></strong>. That's
+        the entire trick. Make your own link below and get someone back.
+      </p>
+    </section>
+
+    <section id="banner-returning" class="panel banner" hidden>
+      <h2>★ welcome back, <span id="returning-name"></span> ★</h2>
+      <p>
+        your link: <code id="returning-link"></code>
+        <button type="button" id="returning-copy">copy</button>
+      </p>
+      <p>current score: <strong id="returning-score"></strong></p>
+    </section>
+
+  </aside>
 
 </main>
 
 <footer>
+  <p class="visitor-counter" id="visitor-counter">YOU ARE VISITOR: 000000</p>
   <p>computervir.us is a joke leaderboard. don't actually click links from people you don't trust — this one's just self-aware.</p>
 </footer>
 
