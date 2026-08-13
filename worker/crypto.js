@@ -34,26 +34,30 @@ export async function mintNonce(payload, secret) {
 
 // Returns the decoded payload if the signature is valid and it's under 60s
 // old, otherwise null. Caller decides what "invalid" means for logging.
+//
+// Wrapped in one try/catch because malformed input (e.g. a sigB64 segment
+// that isn't valid base64 at all) makes atob() throw rather than just
+// failing the signature check — and an attacker-controlled request body is
+// exactly the input this needs to be defensive against, not just
+// well-formed-but-wrong nonces.
 export async function verifyNonce(nonceStr, secret) {
-  const parts = nonceStr.split('.');
-  if (parts.length !== 2) return null;
-  const [payloadB64, sigB64] = parts;
-
-  const key = await importHmacKey(secret);
-  const sigBytes = base64UrlDecodeToBytes(sigB64);
-  const valid = await crypto.subtle.verify('HMAC', key, sigBytes, new TextEncoder().encode(payloadB64));
-  if (!valid) return null;
-
-  let payload;
   try {
-    payload = JSON.parse(base64UrlDecodeToString(payloadB64));
+    const parts = nonceStr.split('.');
+    if (parts.length !== 2) return null;
+    const [payloadB64, sigB64] = parts;
+
+    const key = await importHmacKey(secret);
+    const sigBytes = base64UrlDecodeToBytes(sigB64);
+    const valid = await crypto.subtle.verify('HMAC', key, sigBytes, new TextEncoder().encode(payloadB64));
+    if (!valid) return null;
+
+    const payload = JSON.parse(base64UrlDecodeToString(payloadB64));
+    const ageSeconds = Date.now() / 1000 - payload.ts;
+    if (ageSeconds > 60 || ageSeconds < -5) return null; // -5s slack for clock skew
+    return payload;
   } catch {
     return null;
   }
-
-  const ageSeconds = Date.now() / 1000 - payload.ts;
-  if (ageSeconds > 60 || ageSeconds < -5) return null; // -5s slack for clock skew
-  return payload;
 }
 
 async function importHmacKey(secret) {

@@ -2,10 +2,42 @@ name = "computervirus"
 main = "worker/index.js"
 compatibility_date = "2024-09-23"
 
-# Serves public/ directly during `wrangler dev`, bound as env.ASSETS.
-# In production (real GitHub Pages hosting), the Worker won't have this
-# binding and falls back to fetching FRONTEND_ORIGIN instead — see
-# serveFrontend() in worker/index.js.
-[assets]
+# Environments are used instead of top-level [assets]/[vars] because
+# wrangler *inherits* top-level config into every named environment with no
+# way to unset it — putting [assets] at the top level would mean
+# `[env.production]` gets it too, which defeats the point of proxying to
+# GitHub Pages in prod. So dev and prod are both named environments below,
+# and the top level only holds what's genuinely shared.
+
+# Local dev: `npm run dev` -> `wrangler dev --env dev`. Serves public/
+# directly, bound as env.ASSETS — see the `if (env.ASSETS)` branch in
+# worker/index.js's serveFrontend(). run_worker_first is set so every
+# request (including static files) goes through the Worker's fetch() first,
+# same as production — without it, Cloudflare's asset layer would serve
+# matching static files before the Worker script runs at all, which would
+# make the MAINTENANCE_MODE kill switch untestable locally (it'd only ever
+# catch /api/* and /:token, never "/" itself).
+[env.dev.assets]
 directory = "./public"
 binding = "ASSETS"
+run_worker_first = true
+
+# Production: `npm run deploy` -> `wrangler deploy --env production`. No
+# assets binding, so serveFrontend() falls through to proxying
+# env.FRONTEND_ORIGIN (the real GitHub Pages URL) instead. `name` is set
+# explicitly so the deployed Worker is "computervirus", not the
+# environment-suffixed default "computervirus-production".
+[env.production]
+name = "computervirus"
+routes = [
+  { pattern = "computervir.us/*", zone_name = "computervir.us" }
+]
+
+[env.production.vars]
+# Replace with the real GitHub Pages URL, no trailing slash — see the
+# README's "GitHub Pages setup" step.
+FRONTEND_ORIGIN = "https://REPLACE_ME.github.io/REPLACE_ME"
+# Flip to "true" in the Cloudflare dashboard (Worker -> Settings ->
+# Variables) for an instant kill switch — no redeploy needed. See the
+# README's "Know when it breaks" section.
+MAINTENANCE_MODE = "false"

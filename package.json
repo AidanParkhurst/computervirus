@@ -2,7 +2,8 @@
   "name": "computervirus",
   "private": true,
   "scripts": {
-    "dev": "wrangler dev"
+    "dev": "wrangler dev --env dev",
+    "deploy": "wrangler deploy --env production"
   },
   "devDependencies": {
     "wrangler": "^4.121.0"
